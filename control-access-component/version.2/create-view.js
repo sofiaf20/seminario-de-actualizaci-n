@@ -1,15 +1,12 @@
-/*<h1>Create User Form Screen</h1>
-<input id="usernameInput" type="text" placeholder="Nombre de usuario" value="">
-<input id="passwordInput" type="password" placeholder="Contraseña" value="">
-<button id="createUserButton">Create User</button>*/
-class CreateView extends HTMLElement //canvas o caja html
+
+class CreateView extends HTMLElement 
 {
     constructor()
     {
         super();
 
         this.container = document.createElement('div');
-        this.container.classList.add("w3-container", "w3-modal-content", "w3-card-4", "w3-animate-zoom", "w3-center");
+        this.container.classList.add("w3-modal-content","w3-center");
         this.container.style.maxWidth ='600px';
         
         this.loginImage = document.createElement('img');
@@ -19,10 +16,10 @@ class CreateView extends HTMLElement //canvas o caja html
         this.loginImage.style.width = '30%';
 
         this.loginForm = document.createElement('div');
-        this.loginForm.classList.add("w3-container", "w3-section");
+        this.loginForm.classList.add("w3-section");
 
         this.usernameLabel = document.createElement('label');
-        this.usernameLabel.innerText = 'crear usuario';
+        this.usernameLabel.innerText = 'Usuario';
         this.usernameLabel.style.fontWeight = 'bold';
 
         this.usernameInput = document.createElement('input');
@@ -31,7 +28,7 @@ class CreateView extends HTMLElement //canvas o caja html
         this.usernameInput.setAttribute('required','true');
 
         this.passwordLabel = document.createElement('label');
-        this.passwordLabel.innerText = 'crear contrasenia';
+        this.passwordLabel.innerText = 'Contraseñia';
         this.passwordLabel.style.fontWeight = 'bold';
 
         this.passwordInput = document.createElement('input');
@@ -42,8 +39,19 @@ class CreateView extends HTMLElement //canvas o caja html
 
         this.createUserButton = document.createElement('button');
         this.createUserButton.innerText = 'Crear';
-        this.createUserButton.classList.add("w3-button", "w3-block", "w3-green", "w3-section", "w3-padding");
+        this.createUserButton.classList.add("w3-button","w3-green", "w3-section", "w3-padding");
         
+        this.updateUserButton = document.createElement('button');
+        this.updateUserButton.innerText = 'Editar';
+        this.updateUserButton.classList.add("w3-button","w3-green", "w3-section", "w3-padding");
+
+        this.deleteUserButton = document.createElement('button');
+        this.deleteUserButton.innerText = 'Borrar';
+        this.deleteUserButton.classList.add("w3-button","w3-green", "w3-section", "w3-padding");
+        
+        this.getUserButton = document.createElement('button');
+        this.getUserButton.innerText = 'Pedir usuarios';
+        this.getUserButton.classList.add("w3-button","w3-green", "w3-section", "w3-padding");
        
     }
     getFormValues()
@@ -60,6 +68,16 @@ class CreateView extends HTMLElement //canvas o caja html
 	    return createFormData;
        
     }
+    getUserValues()
+    {
+	    let values = {
+            username: this.usernameInput.value,
+            password: this.passwordInput.value
+        }
+
+	    return values;
+       
+    }
     createNotify( data )
     {
 	    if ( data.status == 'OK')
@@ -69,13 +87,48 @@ class CreateView extends HTMLElement //canvas o caja html
 		    alert('ERROR: '+data.description);
 	    }
     }
-    //ERROR Uncaught (in promise) SyntaxError: JSON.parse: unexpected character at line 2 column 1 of the JSON data
+    deleteNotify( data )
+    {
+	    if ( data.status == 'OK')
+	    {
+		    alert('Usuario borrado '+data.response );
+	    }else{
+		    alert('ERROR: '+data.description);
+	    }
+    }
+    updateNotify( data )
+    {
+	    if ( data.status == 'OK')
+	    {
+		    alert('Usuario editado '+data.response );
+	    }else{
+		    alert('ERROR: '+data.description);
+	    }
+    }
+    
     onCreateUserButtonClick(data)
     {
         console.log( this.getFormValues() );
 	    fetch('./create.php', { method:'post', body: JSON.stringify(this.getFormValues()) } )
 	    .then( response => response.json() )
 	    .then( response => { this.createNotify(response) } );
+	
+    }
+    onDeleteUserButtonClick(data)
+    {
+        console.log( this.getUserValues() );
+	    fetch('./delete.php', { method:'post', body: JSON.stringify(this.getUserValues()) } )
+	    .then( response => response.json() )
+	    .then( response => { this.deleteNotify(response) } );
+	
+    }
+    //no funciona update
+    onUpdateUserButtonClick(data)
+    {
+        console.log( this.getUserValues() );
+	    fetch('./update.php', { method:'post', body: JSON.stringify(this.getUserValues()) } )
+	    .then( response => response.json() )
+	    .then( response => { this.updateNotify(response) } );
 	
     }
     connectedCallback() 
@@ -90,10 +143,15 @@ class CreateView extends HTMLElement //canvas o caja html
         this.loginForm.appendChild(this.passwordInput);
 
         this.loginForm.appendChild(this.createUserButton);
+        this.loginForm.appendChild(this.updateUserButton);
+        this.loginForm.appendChild(this.deleteUserButton);
+        this.loginForm.appendChild(this.getUserButton);
         
 
         this.createUserButton.addEventListener('click', () => this.onCreateUserButtonClick());
-
+        this.deleteUserButton.addEventListener('click', () => this.onDeleteUserButtonClick());
+        //no funciona update
+        this.updateUserButton.addEventListener('click', () => this.onUpdateUserButtonClick());
         this.appendChild(this.container);
     }
     
