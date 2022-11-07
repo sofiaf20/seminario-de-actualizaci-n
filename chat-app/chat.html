@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Aplicación de Chat</title>
+</head>
+
+<body>
+   <button id="btnConnect">Conectar</button>
+   <button>Desconectar</button>
+
+   <br>
+
+   <h4>Usuario A</h4>
+   <textarea>
+      
+   </textarea>
+   <br>
+   <input id="fldMessage" type="text" name="" value="">
+   <button id="btnDesencypt">Cifrar</button>
+   <button id="btnSend">Enviar</button>
+
+   <h4>Usuario B</h4>
+   <textarea>
+      
+   </textarea>
+   <br>
+   <input type="text" name="">
+   <button id="btnDesencrypt">Cifrar</button>
+   <button>Enviar</button>
+</body>
+<script>
+    function connect()
+    {
+        let data =
+        {
+            method: 'POST',
+            body: JSON.stringify(null)
+        };
+
+        fetch("./connect.php", data ).
+        then( response => response.json() ).
+        then( response => 
+        {
+        sessionStorage.setItem('chatKey', response );
+        alert('Connected Sucessfully');
+        });
+    }
+
+
+    function encryptMessage(publicKey, message)
+    {
+        let enc = new TextEncoder();
+        let tmp = enc.encode(message);
+        
+        
+        return window.crypto.subtle.encrypt(
+        {
+            name: "RSA-OAEP",
+        },
+        publicKey,
+        tmp
+        );
+    }
+    function desencryptMessage(publicKey, message)
+    {
+
+    }
+   
+    function send()
+    {
+        let data =
+        {
+            method: 'POST',
+            body: JSON.stringify( encryptMessage(sessionStorage.getItem('chatKey',fldMessage.value) ))
+        };
+
+        fetch("./send-message.php", data ).
+        then( response => response.json() ).
+        then( response => 
+        {
+            alert('Message send Sucessfully');
+        });
+    }
+    function get()
+    {
+        let data =
+        {
+
+        };
+        fetch("./get-message.php", data).
+        then( responde => responde.json() ).
+        then( responde =>
+        {
+            alert('Message get Successfully');
+        });
+    }
+    function updateChat()
+    {
+
+    }
+
+    function main()
+    {
+        btnConnect.addEventListener('click', ()=>connect() );
+        //btnDesencryt.addEventListener('click', ()=>desencryptMessage());
+        btnSend.addEventListener('click', ()=>send() );
+    }
+
+window.addEventListener('load', ()=>main() );
+</script>
+</html>
