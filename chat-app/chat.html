@@ -29,9 +29,10 @@
    <button id="btnDesencrypt">Cifrar</button>
    <button>Enviar</button>
 </body>
-<script>
+<script src="https://cdnjs.cloudflate.com/ajax/libs/crypto.js/3.1.2/rollups/aes.js">
+   
     function connect()
-    {
+    { 
         let data =
         {
             method: 'POST',
@@ -49,12 +50,26 @@
 
 
     function encryptMessage(publicKey, message)
-    {
+    {   /*EJEMPLO
+        //variables
+        var cadena = "";
+        var password = "";
+        //proceso
+        var cifrar = CryptoJS.AES.encrypt(cadena,password);
+        var descifrar = CyptoJS.AES.decrypt(cifrar,password);
+        //obtener los datos
+        document.getElementById("").innerHTML = cadena;
+        document.getElementById("").innerHTML = cifrar;
+        document.getElementById("").innerHTML = descifrado;
+        //mostrar
+        document.getElementById("").innerHTML = descifrado.toString(CryptoJS.enc.utf8);
+        */
+
         let enc = new TextEncoder();
         let tmp = enc.encode(message);
         
         
-        return window.crypto.subtle.encrypt(
+        return window.CryptoJS.AES.encrypt(
         {
             name: "RSA-OAEP",
         },
@@ -103,7 +118,6 @@
     function main()
     {
         btnConnect.addEventListener('click', ()=>connect() );
-        //btnDesencryt.addEventListener('click', ()=>desencryptMessage());
         btnSend.addEventListener('click', ()=>send() );
     }
 

@@ -9,5 +9,9 @@ $key = connect_users('A','B');
 
 echo json_encode($key);
 
+session_start();
+
+$_SESSION["key"] = $key;
+
 
 ?>
