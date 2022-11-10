@@ -2,6 +2,7 @@
 include "config.php";
 
 
+
 function connect_users( $id_user_a, $id_user_b )
 {   
     //Acá haría varias cosas.. pero al final, 
@@ -24,15 +25,15 @@ function descript_message()
 }
 function generate_key( $id_user_sender, $id_user_target )
 {   
-    $clave = hash('sha256', $secret_key);
+    $clave = hash('sha256', uniqid());
     return echo "clave generada: ". $clave;
 
 }
 
 function get_messages( $id_user )
 {
-    //session_start();
-    //return echo "mensajes: " . $_SESSION["usuario"];
+    session_start();
+    return echo "mensajes: " . $_SESSION["usuario"];
 }
 
 ?>

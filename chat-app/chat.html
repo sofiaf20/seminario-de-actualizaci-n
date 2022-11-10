@@ -29,7 +29,8 @@
    <button id="btnDesencrypt">Cifrar</button>
    <button>Enviar</button>
 </body>
-<script src="https://cdnjs.cloudflate.com/ajax/libs/crypto.js/3.1.2/rollups/aes.js">
+<scrip src="https://cdnjs.cloudflate.com/ajax/libs/crypto.js/3.1.2/rollups/aes.js"></scrip>
+<script>
    
     function connect()
     { 
@@ -47,41 +48,6 @@
         alert('Connected Sucessfully');
         });
     }
-
-
-    function encryptMessage(publicKey, message)
-    {   /*EJEMPLO
-        //variables
-        var cadena = "";
-        var password = "";
-        //proceso
-        var cifrar = CryptoJS.AES.encrypt(cadena,password);
-        var descifrar = CyptoJS.AES.decrypt(cifrar,password);
-        //obtener los datos
-        document.getElementById("").innerHTML = cadena;
-        document.getElementById("").innerHTML = cifrar;
-        document.getElementById("").innerHTML = descifrado;
-        //mostrar
-        document.getElementById("").innerHTML = descifrado.toString(CryptoJS.enc.utf8);
-        */
-
-        let enc = new TextEncoder();
-        let tmp = enc.encode(message);
-        
-        
-        return window.CryptoJS.AES.encrypt(
-        {
-            name: "RSA-OAEP",
-        },
-        publicKey,
-        tmp
-        );
-    }
-    function desencryptMessage(publicKey, message)
-    {
-
-    }
-   
     function send()
     {
         let data =
@@ -97,24 +63,26 @@
             alert('Message send Sucessfully');
         });
     }
-    function get()
-    {
-        let data =
+
+    function encryptMessage(key, message)
+    {   
+        let enc = new TextEncoder();
+        let tmp = enc.encode(message);
+        
+        let encription = CryptoJS.AES.encrypt(
         {
+            name: "RSA-OAEP",
+        },
+        key,
+        tmp
+        );
+        console.log(encription);
 
-        };
-        fetch("./get-message.php", data).
-        then( responde => responde.json() ).
-        then( responde =>
-        {
-            alert('Message get Successfully');
-        });
+        let decrypted = CryptoJS.AES.decrypt(encription,key);
+        console.log(decrypted);
+        
     }
-    function updateChat()
-    {
-
-    }
-
+   
     function main()
     {
         btnConnect.addEventListener('click', ()=>connect() );
